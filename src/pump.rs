@@ -146,7 +146,7 @@ impl Pump {
                                 &in_ata,
                                 &owner,
                                 &owner,
-                                &vec![&owner],
+                                &[&owner],
                             )?);
                             in_account.base.amount
                         } else {
@@ -263,7 +263,7 @@ impl Pump {
         if let Some(close_instruction) = close_instruction {
             instructions.push(close_instruction);
         }
-        if instructions.len() == 0 {
+        if instructions.is_empty() {
             return Err(anyhow!("instructions is empty, no tx required"));
         }
 
@@ -321,7 +321,7 @@ pub async fn get_bonding_curve_account(
     program_id: &Pubkey,
 ) -> Result<(Pubkey, Pubkey, BondingCurveAccount)> {
     let bonding_curve = get_pda(mint, program_id)?;
-    let associated_bonding_curve = get_associated_token_address(&bonding_curve, &mint);
+    let associated_bonding_curve = get_associated_token_address(&bonding_curve, mint);
     let bonding_curve_data = rpc_client
         .get_account_data(&bonding_curve)
         .inspect_err(|err| {

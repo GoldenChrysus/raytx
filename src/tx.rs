@@ -58,7 +58,7 @@ pub async fn new_signed_and_send(
     let txn = Transaction::new_signed_with_payer(
         &instructions,
         Some(&keypair.pubkey()),
-        &vec![&*keypair],
+        &vec![keypair],
         recent_blockhash,
     );
 
@@ -91,17 +91,18 @@ pub async fn new_signed_and_send(
 
         let jito_client = Arc::new(JitoRpcClient::new(format!(
             "{}/api/v1/bundles",
-            jito::BLOCK_ENGINE_URL.to_string()
+            *jito::BLOCK_ENGINE_URL
         )));
         // tip tx
-        let mut bundle: Vec<VersionedTransaction> = vec![];
-        bundle.push(VersionedTransaction::from(txn));
-        bundle.push(VersionedTransaction::from(system_transaction::transfer(
-            &keypair,
-            &tip_account,
-            tip_lamports,
-            recent_blockhash,
-        )));
+        let bundle: Vec<VersionedTransaction> = vec![
+            VersionedTransaction::from(txn),
+            VersionedTransaction::from(system_transaction::transfer(
+                keypair,
+                &tip_account,
+                tip_lamports,
+                recent_blockhash,
+            )),
+        ];
         let bundle_id = jito_client.send_bundle(&bundle).await?;
         info!("bundle_id: {}", bundle_id);
 
@@ -122,7 +123,7 @@ pub async fn new_signed_and_send(
         )
         .await?;
     } else {
-        let sig = common::rpc::send_txn(&client, &txn, true)?;
+        let sig = common::rpc::send_txn(client, &txn, true)?;
         info!("signature: {:?}", sig);
         txs.push(sig.to_string());
     }

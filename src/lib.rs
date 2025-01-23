@@ -46,24 +46,28 @@ pub fn get_random_rpc_url() -> Result<String> {
         .clone();
 
     debug!("Choose rpc: {}", random_url);
-    return Ok(random_url);
+
+    Ok(random_url)
 }
 
 pub fn get_rpc_client() -> Result<Arc<RpcClient>> {
     let random_url = get_random_rpc_url()?;
     let client = RpcClient::new(random_url);
-    return Ok(Arc::new(client));
+
+    Ok(Arc::new(client))
 }
 
 pub fn get_rpc_client_blocking() -> Result<Arc<solana_client::rpc_client::RpcClient>> {
     let random_url = get_random_rpc_url()?;
     let client = solana_client::rpc_client::RpcClient::new(random_url);
-    return Ok(Arc::new(client));
+
+    Ok(Arc::new(client))
 }
 
 pub fn get_wallet() -> Result<Arc<Keypair>> {
     let wallet = Keypair::from_base58_string(&env::var("PRIVATE_KEY")?);
-    return Ok(Arc::new(wallet));
+
+    Ok(Arc::new(wallet))
 }
 
 #[cfg(test)]

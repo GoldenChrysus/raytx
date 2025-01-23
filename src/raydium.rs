@@ -171,7 +171,7 @@ impl Raydium {
                                 &in_ata,
                                 &owner,
                                 &owner,
-                                &vec![&owner],
+                                &[&owner],
                             )?);
                             in_account.base.amount
                         } else {
@@ -302,7 +302,7 @@ impl Raydium {
         if let Some(close_instruction) = close_instruction {
             instructions.push(close_instruction);
         }
-        if instructions.len() == 0 {
+        if instructions.is_empty() {
             return Err(anyhow!("instructions is empty, no tx required"));
         }
 
@@ -310,6 +310,7 @@ impl Raydium {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn amm_swap(
     amm_program: &Pubkey,
     result: AmmSwapInfoResult,
@@ -322,7 +323,7 @@ pub fn amm_swap(
 ) -> Result<Instruction> {
     let swap_instruction = if swap_base_in {
         raydium_amm::instruction::swap_base_in(
-            &amm_program,
+            amm_program,
             &result.pool_id,
             &result.amm_authority,
             &result.amm_open_orders,
@@ -344,7 +345,7 @@ pub fn amm_swap(
         )?
     } else {
         raydium_amm::instruction::swap_base_out(
-            &amm_program,
+            amm_program,
             &result.pool_id,
             &result.amm_authority,
             &result.amm_open_orders,

@@ -47,8 +47,8 @@ pub async fn swap(
         Some(v) => v,
         None => {
             let slippage = env::var("SLIPPAGE").unwrap_or("5".to_string());
-            let slippage = slippage.parse::<u64>().unwrap_or(5);
-            slippage
+
+            slippage.parse::<u64>().unwrap_or(5)
         }
     };
 
@@ -146,7 +146,7 @@ pub async fn coins(State(state): State<AppState>, Path(mint): Path<String>) -> i
         }
     }
 
-    return api_ok(pump_info);
+    api_ok(pump_info)
 }
 
 #[debug_handler]
