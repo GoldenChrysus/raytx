@@ -65,4 +65,4 @@ COPY --from=build /bin/server .
 EXPOSE 7235
 
 # What the container should run when it is started.
-CMD ["/app/server", "daemon"]
+ENTRYPOINT ["/app/server", "daemon"]
